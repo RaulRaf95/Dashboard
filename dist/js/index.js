@@ -1,12 +1,12 @@
 function onScanSuccess(decodedText, decodedResult) {
   // handle the scanned code as you like, for example:
-  console.log(`Code matched = ${decodedText}`, decodedResult);
-  html5QrCode.stop().then((ignore) => {
-      alert("Decodetext: " + decodedText);
-    // QR Code scanning is stopped.
-  }).catch((err) => {
-    // Stop failed, handle it.
-  });
+    console.log(`Code matched = ${decodedText}`, decodedResult);
+    alert("Decodetext: " + decodedText);
+//   html5QrCode.stop().then((ignore) => {
+//     // QR Code scanning is stopped.
+//   }).catch((err) => {
+//     // Stop failed, handle it.
+//   });
 }
 
 function onScanFailure(error) {
