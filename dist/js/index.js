@@ -15,16 +15,8 @@ function onScanSuccess(decodedText, decodedResult) {
     // });
     // html5QrcodeScanner.clean()
     
-    // MODIFICADO
-    $.ajax({
-      type: "GET",
-      url: "https://prod-145.westeurope.logic.azure.com:443/workflows/a14c7effa502449bb946c7899304a0a0/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=85o2YUJDBNrounAa4J435kXBtASdfXrDxkWgw701wNM",
-      // data: "data",
-      dataType: "JSON",
-      success: function (data) {
-        console.log(data);
-      }
-    });
+    
+    llenarTabla();
     Swal.fire({
       title: "Correcto",
       text: decodedText,
@@ -49,6 +41,46 @@ function onScanFailure(error) {
 
 
 html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+
+
+
+function llenarTabla() {
+  $("#tbody_registros").empty();
+  // MODIFICADO
+  $.ajax({
+    type: "GET",
+    url: "https://prod-145.westeurope.logic.azure.com:443/workflows/a14c7effa502449bb946c7899304a0a0/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=85o2YUJDBNrounAa4J435kXBtASdfXrDxkWgw701wNM",
+    // data: "data",
+    dataType: "JSON",
+    success: function (data) {
+      console.log(data);
+      var array_datos = data.result.Table1
+      console.log("array",array_datos);
+      array_datos.forEach(e => {
+        console.log(e);
+        $("#tbody_registros").append(
+          "<tr>"+
+            "<th scope='row'>" + e.idAssetsByUser + "</th>"+
+            "<td>" + e.serial + "</td>"+
+            "<td>" + e.country + "</td>"+
+            "<td>" + e.options + "</td>"+
+          "</tr>"
+        );
+
+      }); // fin array
+
+    } // fin success
+  }); // fin ajax
+} // fin metodo
+
+
+
+
+
+
+
+
+
 
 
 
