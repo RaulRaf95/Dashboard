@@ -78,7 +78,7 @@ function postLlenarTabla(serial) {
   $("#tbody_registros").empty();
   // MODIFICADO
   $.ajax({
-    type: "GET",
+    type: "POST",
     url: "https://prod-38.westeurope.logic.azure.com:443/workflows/eb263ee8f75e42549d22f5c36373b4af/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vu-fCkljWVYPzBkQhKe48s1_h4ZtCR1SjStkwpXUzX4",
     data: JSON.stringify({
       serial: serial
