@@ -16,7 +16,8 @@ function onScanSuccess(decodedText, decodedResult) {
     // html5QrcodeScanner.clean()
     
     
-    llenarTabla();
+    // getLlenarTabla();
+    postLlenarTabla(decodedText);
     Swal.fire({
       title: "Correcto",
       text: decodedText,
@@ -44,7 +45,7 @@ html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 
 
 
-function llenarTabla() {
+function getLlenarTabla() {
   $("#tbody_registros").empty();
   // MODIFICADO
   $.ajax({
@@ -64,6 +65,37 @@ function llenarTabla() {
             "<td>" + e.serial + "</td>"+
             "<td>" + e.country + "</td>"+
             "<td>" + e.options + "</td>"+
+          "</tr>"
+        );
+
+      }); // fin array
+
+    } // fin success
+  }); // fin ajax
+} // fin metodo
+
+function postLlenarTabla(serial) {
+  $("#tbody_registros").empty();
+  // MODIFICADO
+  $.ajax({
+    type: "GET",
+    url: "https://prod-38.westeurope.logic.azure.com:443/workflows/eb263ee8f75e42549d22f5c36373b4af/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vu-fCkljWVYPzBkQhKe48s1_h4ZtCR1SjStkwpXUzX4",
+    data: JSON.stringify({
+      serial: serial
+    }),
+    dataType: "JSON",
+    success: function (data) {
+      console.log(data);
+      var array_datos = data.result.Table1
+      console.log("array",array_datos);
+      array_datos.forEach(e => {
+        console.log(e);
+        $("#tbody_registros").append(
+          "<tr>"+
+            "<th scope='row'>" + e.Serial_Number + "</th>"+
+            "<td>" + e.Action + "</td>"+
+            "<td>" + e.User_x0020_ID + "</td>"+
+            "<td>" + e.Model_x0020_ID + "</td>"+
           "</tr>"
         );
 
