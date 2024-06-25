@@ -6,14 +6,34 @@ let html5QrcodeScanner = new Html5QrcodeScanner(
 
 function onScanSuccess(decodedText, decodedResult) {
   // handle the scanned code as you like, for example:
-    console.log(`Code matched = ${decodedText}`, decodedResult);
-    Swal.fire({
-        title: "Correcto",
-        text: decodedText,
-        icon: "success"
+    // ORINGAL
+    // console.log(`Code matched = ${decodedText}`, decodedResult);
+    // Swal.fire({
+    //     title: "Correcto",
+    //     text: decodedText,
+    //     icon: "success"
+    // });
+    // html5QrcodeScanner.clean()
+    
+    // MODIFICADO
+    $.ajax({
+      type: "GET",
+      url: "https://prod-145.westeurope.logic.azure.com:443/workflows/a14c7effa502449bb946c7899304a0a0/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=85o2YUJDBNrounAa4J435kXBtASdfXrDxkWgw701wNM",
+      // data: "data",
+      dataType: "JSON",
+      success: function (data) {
+        console.log(data);
+      }
     });
-    html5QrcodeScanner.clean()
+    Swal.fire({
+      title: "Correcto",
+      text: decodedText,
+      icon: "success"
+    });
 }
+
+
+
 //   html5QrCode.stop().then((ignore) => {
 //     // QR Code scanning is stopped.
 //   }).catch((err) => {
