@@ -76,14 +76,18 @@ function getLlenarTabla() {
 
 function postLlenarTabla(serial) {
   $("#tbody_registros").empty();
+
+  var json = JSON.stringify({
+    serial:serial
+  });
+
   // MODIFICADO
   $.ajax({
     type: "POST",
     url: "https://prod-38.westeurope.logic.azure.com:443/workflows/eb263ee8f75e42549d22f5c36373b4af/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vu-fCkljWVYPzBkQhKe48s1_h4ZtCR1SjStkwpXUzX4",
-    data: {
-      serial: serial
-    },
+    data: json,
     dataType: "JSON",
+    contentType: 'application/json',
     success: function (data) {
       console.log(data);
       var array_datos = data.result.Table1
@@ -102,7 +106,7 @@ function postLlenarTabla(serial) {
       }); // fin array
 
     }, error(data) {
-      alert(data);
+      console.log(data);
     } // fin success
   }); // fin ajax
 } // fin metodo
