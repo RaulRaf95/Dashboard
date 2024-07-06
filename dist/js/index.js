@@ -30,11 +30,19 @@ function onScanSuccess(decodedText, decodedResult) {
     //   icon: "success"
     // });
 
+    // VALIDAR SI EL 1ER CARACTER ES UNA S O s
+    var limpio;
+    if (decodedText.indexOf("s") !== -1 || decodedText.indexOf("S") !== -1) {
+      limpio = decodedText.slice(1)
+    } else {
+      limpio = decodedText;
+    }
+
     // MODIFICADO
-    APIPostInventory(decodedText);
+    APIPostInventory(limpio);
     Swal.fire({
       title: "Correcto",
-      text: decodedText,
+      text: limpio,
       icon: "success"
     });
 }
@@ -206,6 +214,7 @@ function APIPostInventory(serial) {
           }); // fin ciclo array
         } // fin else array > 1
       }); // fin ciclo salidaAPI
+      // nueva instancia de datatable
       tablaDatos = $('#zero_config').DataTable({pageLength: 10});
     }, error(data) {
       console.log(data);
@@ -216,19 +225,33 @@ function APIPostInventory(serial) {
 $("#btnProbar").click(function (e) { 
   e.preventDefault();
   console.log("variable",salidaAPI);
+  console.log("llaves",Object.keys(salidaAPI));
 });
 
 $("#input_serial").blur(function (e) { 
   e.preventDefault();
   // console.log("fuera de foco",$("#input_serial").val());
   // MODIFICADO
-  APIPostInventory($("#input_serial").val());
-  Swal.fire({
-    title: "Correcto",
-    text: $("#input_serial").val(),
-    icon: "success"
-  });
-  $("#input_serial").val("");
+  if ($("#input_serial").val().length > 4) {
+    // VALIDAR SI EL 1ER CARACTER ES UNA S O s
+    var entrada = $("#input_serial").val();
+    var limpio;
+    if (entrada.indexOf("s") !== -1 || entrada.indexOf("S") !== -1) {
+      limpio = entrada.slice(1)
+    } else {
+      limpio = entrada;
+    }
+
+    APIPostInventory(limpio);
+    Swal.fire({
+      title: "Correcto",
+      text: $("#input_serial").val(),
+      icon: "success"
+    });
+    $("#input_serial").val("");
+    
+  }
+
 });
 
 
