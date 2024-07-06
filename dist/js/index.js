@@ -228,6 +228,7 @@ $("#input_serial").blur(function (e) {
     text: $("#input_serial").val(),
     icon: "success"
   });
+  $("#input_serial").val("");
 });
 
 
