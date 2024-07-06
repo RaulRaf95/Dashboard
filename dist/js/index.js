@@ -89,21 +89,21 @@ function postLlenarTabla(serial) {
     dataType: "JSON",
     contentType: 'application/json',
     success: function (data) {
-      console.log(data);
-      var array_datos = data.result.Table1
-      console.log("array",array_datos);
-      array_datos.forEach(e => {
-        console.log(e);
-        $("#tbody_registros").append(
-          "<tr>"+
-            "<th scope='row'>" + e.Serial_Number + "</th>"+
-            "<td>" + e.Action + "</td>"+
-            "<td>" + e.User_x0020_ID + "</td>"+
-            "<td>" + e.Model_x0020_ID + "</td>"+
-          "</tr>"
-        );
+      console.log("resultado",data);
+      // var array_datos = data.result.Table1
+      // console.log("array",array_datos);
+      // array_datos.forEach(e => {
+      //   console.log(e);
+      //   $("#tbody_registros").append(
+      //     "<tr>"+
+      //       "<th scope='row'>" + e.Serial_Number + "</th>"+
+      //       "<td>" + e.Action + "</td>"+
+      //       "<td>" + e.User_x0020_ID + "</td>"+
+      //       "<td>" + e.Model_x0020_ID + "</td>"+
+      //     "</tr>"
+      //   );
 
-      }); // fin array
+      // }); // fin array
 
     }, error(data) {
       console.log(data);
