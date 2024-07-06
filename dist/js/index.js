@@ -1,3 +1,8 @@
+// variable global que almacena la data
+var salidaAPI = [];
+// inatncia de tabla 
+var tablaDatos = new DataTable('#zero_config');
+
 // INSTANCIA Y METODOS PARA LECTOR QR
 let html5QrcodeScanner = new Html5QrcodeScanner(
   "reader",
@@ -16,9 +21,17 @@ function onScanSuccess(decodedText, decodedResult) {
     // });
     // html5QrcodeScanner.clean()
     
-    
-    // getLlenarTabla();
-    postLlenarTabla(decodedText);
+    // ORIGINAL
+    // // getLlenarTabla();
+    // postLlenarTabla(decodedText);
+    // Swal.fire({
+    //   title: "Correcto",
+    //   text: decodedText,
+    //   icon: "success"
+    // });
+
+    // MODIFICADO
+    APIPostInventory(decodedText);
     Swal.fire({
       title: "Correcto",
       text: decodedText,
@@ -43,75 +56,151 @@ html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 // FIN INSTANCIA Y METODOS PARA LECTOR QR
 
 
-
-
-function getLlenarTabla() {
-  $("#tbody_registros").empty();
-  // MODIFICADO
-  $.ajax({
-    type: "GET",
-    url: "https://prod-145.westeurope.logic.azure.com:443/workflows/a14c7effa502449bb946c7899304a0a0/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=85o2YUJDBNrounAa4J435kXBtASdfXrDxkWgw701wNM",
-    // data: "data",
-    dataType: "JSON",
-    success: function (data) {
-      console.log(data);
-      var array_datos = data.result.Table1
-      console.log("array",array_datos);
-      array_datos.forEach(e => {
-        console.log(e);
-        $("#tbody_registros").append(
-          "<tr>"+
-            "<th scope='row'>" + e.idAssetsByUser + "</th>"+
-            "<td>" + e.serial + "</td>"+
-            "<td>" + e.country + "</td>"+
-            "<td>" + e.options + "</td>"+
-          "</tr>"
-        );
-
-      }); // fin array
-
-    } // fin success
-  }); // fin ajax
-} // fin metodo
-
-function postLlenarTabla(serial) {
-  $("#tbody_registros").empty();
-
+function APIPostInventory(serial) {
   var json = JSON.stringify({
     serial:serial
   });
 
-  // MODIFICADO
   $.ajax({
     type: "POST",
     url: "https://prod-38.westeurope.logic.azure.com:443/workflows/eb263ee8f75e42549d22f5c36373b4af/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vu-fCkljWVYPzBkQhKe48s1_h4ZtCR1SjStkwpXUzX4",
     data: json,
     dataType: "JSON",
     contentType: 'application/json',
+    // async: false,
     success: function (data) {
-      console.log("resultado",data);
-      // var array_datos = data.result.Table1
-      // console.log("array",array_datos);
-      // array_datos.forEach(e => {
-      //   console.log(e);
-      //   $("#tbody_registros").append(
-      //     "<tr>"+
-      //       "<th scope='row'>" + e.Serial_Number + "</th>"+
-      //       "<td>" + e.Action + "</td>"+
-      //       "<td>" + e.User_x0020_ID + "</td>"+
-      //       "<td>" + e.Model_x0020_ID + "</td>"+
-      //     "</tr>"
-      //   );
+      // console.log("resultado",data);
+      console.log("resultado Ajax",data.result.Table1);
+      // gaurdar datos en variable global
+      salidaAPI.push(data.result.Table1);
+      // salidaAPI = data.result.Table1;
+      console.log("despues de ajax",salidaAPI);
 
-      // }); // fin array
+      if (salidaAPI.length !== 0) {
+        tablaDatos.destroy();
+      }
+
+      $("#tbody_datos").empty();
+      salidaAPI.forEach(e => {
+        console.log("iteracion",e);
+        var array = e ;
+        array.forEach(a => {
+          $("#tbody_datos").append(
+            "<tr>"+
+                "<td>" + a.Serial_Number + "</td>"+
+                "<td>" + a['Model ID'] + "</td>"+
+                "<td>" + a['assigned to'] + "</td>"+
+                "<td>" + "revisar" + "</td>"+
+                "<td>" + a['Install status'] + "</td>"+
+                "<td>" + "revisar" + "</td>"+
+                "<td>" + a.Stockroom + "</td>"+
+                "<td>" + a.Action + "</td>"+
+                "<td>" + a.DaysNotconnect + "</td>"+
+                "<td>" + a.Comments + "</td>"+
+            "</tr>"
+          );
+          
+        }); // fin ciclo iteracion
+      }); // fin ciclo salidaAPI
+
+      tablaDatos = $('#zero_config').DataTable({pageLength: 10});
+
+
+
+
 
     }, error(data) {
       console.log(data);
     } // fin success
   }); // fin ajax
-} // fin metodo
+}
 
-$('#zero_config').DataTable();
+$("#btnProbar").click(function (e) { 
+  e.preventDefault();
+  console.log("variable",salidaAPI);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// function getLlenarTabla() {
+//   $("#tbody_registros").empty();
+//   // MODIFICADO
+//   $.ajax({
+//     type: "GET",
+//     url: "https://prod-145.westeurope.logic.azure.com:443/workflows/a14c7effa502449bb946c7899304a0a0/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=85o2YUJDBNrounAa4J435kXBtASdfXrDxkWgw701wNM",
+//     // data: "data",
+//     dataType: "JSON",
+//     success: function (data) {
+//       console.log(data);
+//       var array_datos = data.result.Table1
+//       console.log("array",array_datos);
+//       array_datos.forEach(e => {
+//         console.log(e);
+//         $("#tbody_registros").append(
+//           "<tr>"+
+//             "<th scope='row'>" + e.idAssetsByUser + "</th>"+
+//             "<td>" + e.serial + "</td>"+
+//             "<td>" + e.country + "</td>"+
+//             "<td>" + e.options + "</td>"+
+//           "</tr>"
+//         );
+
+//       }); // fin array
+
+//     } // fin success
+//   }); // fin ajax
+// } // fin metodo
+
+// function postLlenarTabla(serial) {
+//   $("#tbody_registros").empty();
+
+//   var json = JSON.stringify({
+//     serial:serial
+//   });
+
+//   // MODIFICADO
+//   $.ajax({
+//     type: "POST",
+//     url: "https://prod-38.westeurope.logic.azure.com:443/workflows/eb263ee8f75e42549d22f5c36373b4af/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vu-fCkljWVYPzBkQhKe48s1_h4ZtCR1SjStkwpXUzX4",
+//     data: json,
+//     dataType: "JSON",
+//     contentType: 'application/json',
+//     success: function (data) {
+//       console.log("resultado",data);
+//       // var array_datos = data.result.Table1
+//       // console.log("array",array_datos);
+//       // array_datos.forEach(e => {
+//       //   console.log(e);
+//       //   $("#tbody_registros").append(
+//       //     "<tr>"+
+//       //       "<th scope='row'>" + e.Serial_Number + "</th>"+
+//       //       "<td>" + e.Action + "</td>"+
+//       //       "<td>" + e.User_x0020_ID + "</td>"+
+//       //       "<td>" + e.Model_x0020_ID + "</td>"+
+//       //     "</tr>"
+//       //   );
+
+//       // }); // fin array
+
+//     }, error(data) {
+//       console.log(data);
+//     } // fin success
+//   }); // fin ajax
+// } // fin metodo
+
+// $('#zero_config').DataTable();
 
 
 
