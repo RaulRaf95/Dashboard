@@ -1,3 +1,4 @@
+// INSTANCIA Y METODOS PARA LECTOR QR
 let html5QrcodeScanner = new Html5QrcodeScanner(
   "reader",
   { fps: 2, qrbox: { width: 250, height: 250 } },
@@ -25,8 +26,6 @@ function onScanSuccess(decodedText, decodedResult) {
     });
 }
 
-
-
 //   html5QrCode.stop().then((ignore) => {
 //     // QR Code scanning is stopped.
 //   }).catch((err) => {
@@ -39,9 +38,10 @@ function onScanFailure(error) {
   console.warn(`Code scan error = ${error}`);
 }
 
-
-
 html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+
+// FIN INSTANCIA Y METODOS PARA LECTOR QR
+
 
 
 
@@ -110,6 +110,8 @@ function postLlenarTabla(serial) {
     } // fin success
   }); // fin ajax
 } // fin metodo
+
+$('#zero_config').DataTable();
 
 
 
