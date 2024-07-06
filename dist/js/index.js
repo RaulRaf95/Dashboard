@@ -69,55 +69,165 @@ function APIPostInventory(serial) {
     contentType: 'application/json',
     // async: false,
     success: function (data) {
-      // console.log("resultado",data);
-      console.log("resultado Ajax",data.result.Table1);
-      // gaurdar datos en variable global
-      salidaAPI.push(data.result.Table1);
-      // salidaAPI = data.result.Table1;
-      console.log("despues de ajax",salidaAPI);
+      var aux = data;
+      var encontrado = '<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#63E6BE" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg>';
+      var noEncontrado = '<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#a21616" d="M367.2 412.5L99.5 144.8C77.1 176.1 64 214.5 64 256c0 106 86 192 192 192c41.5 0 79.9-13.1 111.2-35.5zm45.3-45.3C434.9 335.9 448 297.5 448 256c0-106-86-192-192-192c-41.5 0-79.9 13.1-111.2 35.5L412.5 367.2zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256z"/></svg>';
+      // class="table-danger"
+      
+      console.log("resultado",data);
+      // console.log("valor",Object.keys(Object.values(aux)[0]).length);
+      // console.log("valor",Object.values(aux));
 
+
+      if (Object.keys(Object.values(aux)[0]).length == 0) {
+        salidaAPI.push([{
+          Action: "No encontrado",
+          CWID:"No encontrado",
+          Comments:"No encontrado",
+          Country: "No encontrado",
+          DaysNotconnect: "No encontrado",
+          DaysOffline: 0,
+          Firmado: "No encontrado",
+          'Install status': "No encontrado",
+          InventoryNumber: null,
+          LOCATION: "No encontrado",
+          LastSeen: "No encontrado",
+          Localidad : null,
+          'Location Country': "No encontrado",
+          "Model ID": "No encontrado",
+          Serial_Number: serial,
+          Stockroom: null,
+          "User ID": "No encontrado",
+          UserName: "No encontrado",
+          "assigned to": "No encontrado"
+        }]);
+      } else {
+        aux = data.result.Table1;
+        salidaAPI.push(aux);
+      }
+
+      // guardar datos en variable global
+      // salidaAPI = data.result.Table1;
+      // console.log("despues de ajax",salidaAPI);
+
+      // eliminar instancia de datatable
       if (salidaAPI.length !== 0) {
         tablaDatos.destroy();
       }
-
+      // MODIFICADO
       $("#tbody_datos").empty();
-      salidaAPI.forEach(e => {
-        console.log("iteracion",e);
-        var array = e ;
-        array.forEach(a => {
-          $("#tbody_datos").append(
-            "<tr>"+
-                "<td>" + a.Serial_Number + "</td>"+
-                "<td>" + a['Model ID'] + "</td>"+
-                "<td>" + a['assigned to'] + "</td>"+
-                "<td>" + "revisar" + "</td>"+
-                "<td>" + a['Install status'] + "</td>"+
-                "<td>" + "revisar" + "</td>"+
-                "<td>" + a.Stockroom + "</td>"+
-                "<td>" + a.Action + "</td>"+
-                "<td>" + a.DaysNotconnect + "</td>"+
-                "<td>" + a.Comments + "</td>"+
-            "</tr>"
-          );
-          
-        }); // fin ciclo iteracion
+      salidaAPI.forEach((elemento,i) => {
+        // obtener el array en las iteraciones
+        var array = elemento;
+        if (array.length == 1) {
+          if (array[0].Action == "No encontrado") {
+            $("#tbody_datos").append(
+              "<tr class='table-danger'>"+
+                  "<td style='text-align:center;align-content: center'>" + noEncontrado + " " + array[0].Serial_Number + "</td>"+
+                  "<td>" + array[0]['Model ID'] + "</td>"+
+                  "<td>" + array[0]['assigned to'] + "</td>"+
+                  "<td>" + "No encontrado" + "</td>"+
+                  "<td>" + array[0]['Install status'] + "</td>"+
+                  "<td>" + "No encontrado" + "</td>"+
+                  "<td>" + array[0].Stockroom + "</td>"+
+                  "<td>" + array[0].Action + "</td>"+
+                  "<td>" + array[0].DaysNotconnect + "</td>"+
+                  "<td>" + array[0].Comments + "</td>"+
+                  "<td style='text-align:center;align-content: center'>" + noEncontrado + "</td>"+
+              "</tr>"
+            );
+          } else {
+            $("#tbody_datos").append(
+              "<tr>"+
+                  "<td style='text-align:center;align-content: center'>" + encontrado + " " + array[0].Serial_Number + "</td>"+
+                  "<td>" + array[0]['Model ID'] + "</td>"+
+                  "<td>" + array[0]['assigned to'] + "</td>"+
+                  "<td>" + "Revisar" + "</td>"+
+                  "<td>" + array[0]['Install status'] + "</td>"+
+                  "<td>" + "Revisar" + "</td>"+
+                  "<td>" + array[0].Stockroom + "</td>"+
+                  "<td>" + array[0].Action + "</td>"+
+                  "<td>" + array[0].DaysNotconnect + "</td>"+
+                  "<td>" + array[0].Comments + "</td>"+
+                  "<td style='text-align:center;align-content: center'>" + encontrado + "</td>"+
+              "</tr>"
+            );
+          }
+        } else {
+          var resto_array;
+          var total;
+          // enviar esta info. a la ventana modal
+          resto_array = array.slice(1);
+          total = resto_array.length;
+          array.forEach((elemento2,contador) => {
+            if (contador == 0) {
+              $("#tbody_datos").append(
+                "<tr>"+
+                  "<td style='text-align:center;align-content: center'>" + encontrado + " " + elemento2.Serial_Number + "</td>"+
+                      "<td>" + elemento2['Model ID'] + "</td>"+
+                      "<td>" + elemento2['assigned to'] + "</td>"+
+                      "<td>" + "revisar" + "</td>"+
+                      "<td>" + elemento2['Install status'] + "</td>"+
+                      "<td>" + "revisar" + "</td>"+
+                      "<td>" + elemento2.Stockroom + "</td>"+
+                      "<td>" + elemento2.Action + "</td>"+
+                      "<td>" + elemento2.DaysNotconnect + "</td>"+
+                      "<td>" + elemento2.Comments + "</td>"+
+                      "<td style='text-align:center;align-content: center'>" + 
+                      "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#exampleModal'>"+
+                        "Total <span class='badge badge-light'>" + (total + 1) + "</span>"+
+                      "</button>"+ 
+                    "</td>"+
+                "</tr>"
+              );// mostrar registro
+
+              $('#exampleModal').on('show.bs.modal', function (event) {
+                $("#titulo_modal").html("Devices");
+                $("#tbody_dispositivos").empty();
+                resto_array.forEach(x => {
+                  $("#tbody_dispositivos").append(
+                    "<tr>"+
+                      "<td style='text-align:center;align-content: center'>" + encontrado + " " + x.Serial_Number + "</td>"+
+                          "<td>" + x['Model ID'] + "</td>"+
+                          "<td>" + x.UserName + "</td>"+
+                          "<td>" + x['assigned to'] + "</td>"+
+                          "<td>" + x['Install status'] + "</td>"+
+                          "<td>" + x.InventoryNumber + "</td>"+
+                          "<td>" + x.Localidad + "</td>"+
+                          "<td>" + x.Action + "</td>"+
+                          "<td>" + x.DaysNotconnect + "</td>"+
+                          "<td>" + x.Comments + "</td>"+
+                    "</tr>"
+                  );
+                }); // fin ciclo resto_array
+              }) // cuando se muestra el modal
+
+            } // solo la 1er iteracion
+          }); // fin ciclo array
+        } // fin else array > 1
       }); // fin ciclo salidaAPI
-
       tablaDatos = $('#zero_config').DataTable({pageLength: 10});
-
-
-
-
-
     }, error(data) {
       console.log(data);
     } // fin success
   }); // fin ajax
-}
+} // fin metodo
 
 $("#btnProbar").click(function (e) { 
   e.preventDefault();
   console.log("variable",salidaAPI);
+});
+
+$("#input_serial").blur(function (e) { 
+  e.preventDefault();
+  // console.log("fuera de foco",$("#input_serial").val());
+  // MODIFICADO
+  APIPostInventory($("#input_serial").val());
+  Swal.fire({
+    title: "Correcto",
+    text: $("#input_serial").val(),
+    icon: "success"
+  });
 });
 
 

@@ -410,11 +410,19 @@
                 <br>
                 <!-- ============================================================== -->
                 <div class="row">
-                    <div>
+                    <!-- <div>
                         <button id="btnProbar" >probably</button>
-                    </div>
+                    </div> -->
 
                     <div class="col-12">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">
+                                    <i class="fas fa-qrcode fa-xl"></i>
+                                </span>
+                            </div>
+                            <input type="text" id="input_serial" class="form-control" placeholder="Serial" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
 
                         <div class="card">
                             <div class="card-body">
@@ -433,6 +441,7 @@
                                                 <th>Action</th>
                                                 <th>Days Not Connect</th>
                                                 <th>Comments</th>
+                                                <th>Total assigned</th>
                                             </tr>
                                         </thead>
                                         <tbody id="tbody_datos"></tbody>
@@ -448,6 +457,7 @@
                                                 <th>Action</th>
                                                 <th>Days Not Connect</th>
                                                 <th>Comments</th>
+                                                <th>Total assigned</th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -1068,6 +1078,72 @@
         <!-- End Page wrapper  -->
         <!-- ============================================================== -->
     </div>
+
+    <!-- MODAL PARA LOS REGISTROS ANIDADOS -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="titulo_modal"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table">
+                          <thead class="thead-dark">
+                            <tr>
+                              <th scope="col">Serial Number</th>
+                              <th scope="col">Model ID</th>
+                              <th scope="col">Used for</th>
+                              <th scope="col">Assigned to</th>
+                              <th scope="col">Install Status</th>
+                              <th scope="col">Inventory Number</th>
+                              <th scope="col">Localidad</th>
+                              <th scope="col">Action</th>
+                              <th scope="col">Days Not Connect</th>
+                              <th scope="col">Comments</th>
+                            </tr>
+                          </thead>
+                          <tbody id="tbody_dispositivos">
+                            <tr>
+                              <th scope="row">1</th>
+                              <td>Mark</td>
+                              <td>Otto</td>
+                              <td>@mdo</td>
+                            </tr>
+                          </tbody>
+                          <tfoot class="thead-dark">
+                            <tr>
+                                <th scope="col">Serial Number</th>
+                                <th scope="col">Model ID</th>
+                                <th scope="col">Used for</th>
+                                <th scope="col">Assigned to</th>
+                                <th scope="col">Install Status</th>
+                                <th scope="col">Inventory Number</th>
+                                <th scope="col">Localidad</th>
+                                <th scope="col">Action</th>
+                                <th scope="col">Days Not Connect</th>
+                                <th scope="col">Comments</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+
+
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+
     <!-- ============================================================== -->
     <!-- End Wrapper -->
     <!-- ============================================================== -->
