@@ -83,6 +83,7 @@ function APIPostInventory(serial) {
       // class="table-danger"
       
       console.log("resultado",data);
+      console.log("global",salidaAPI);
       // console.log("valor",Object.keys(Object.values(aux)[0]).length);
       // console.log("valor",Object.values(aux));
 
@@ -131,33 +132,33 @@ function APIPostInventory(serial) {
           if (array[0].Action == "No encontrado") {
             $("#tbody_datos").append(
               "<tr class='table-danger'>"+
-                  "<td style='text-align:center;align-content: center'>" + noEncontrado + " " + array[0].Serial_Number + "</td>"+
-                  "<td>" + array[0]['Model ID'] + "</td>"+
-                  "<td>" + array[0]['assigned to'] + "</td>"+
-                  "<td>" + "No encontrado" + "</td>"+
-                  "<td>" + array[0]['Install status'] + "</td>"+
-                  "<td>" + "No encontrado" + "</td>"+
-                  "<td>" + array[0].Stockroom + "</td>"+
-                  "<td>" + array[0].Action + "</td>"+
-                  "<td>" + array[0].DaysNotconnect + "</td>"+
-                  "<td>" + array[0].Comments + "</td>"+
-                  "<td style='text-align:center;align-content: center'>" + noEncontrado + "</td>"+
+                "<td style='text-align:center;align-content: center'>" + noEncontrado + "</td>"+
+                "<td style='text-align:center;align-content: center'>" + noEncontrado + " " + array[0].Serial_Number + "</td>"+
+                "<td>" + array[0]['Model ID'] + "</td>"+
+                "<td>" + array[0]['assigned to'] + "</td>"+
+                "<td>" + "No encontrado" + "</td>"+
+                "<td>" + array[0]['Install status'] + "</td>"+
+                "<td>" + "No encontrado" + "</td>"+
+                "<td>" + array[0].Stockroom + "</td>"+
+                "<td>" + array[0].Action + "</td>"+
+                "<td>" + array[0].DaysNotconnect + "</td>"+
+                "<td>" + array[0].Comments + "</td>"+
               "</tr>"
             );
           } else {
             $("#tbody_datos").append(
               "<tr>"+
-                  "<td style='text-align:center;align-content: center'>" + encontrado + " " + array[0].Serial_Number + "</td>"+
-                  "<td>" + array[0]['Model ID'] + "</td>"+
-                  "<td>" + array[0]['assigned to'] + "</td>"+
-                  "<td>" + "Revisar" + "</td>"+
-                  "<td>" + array[0]['Install status'] + "</td>"+
-                  "<td>" + "Revisar" + "</td>"+
-                  "<td>" + array[0].Stockroom + "</td>"+
-                  "<td>" + array[0].Action + "</td>"+
-                  "<td>" + array[0].DaysNotconnect + "</td>"+
-                  "<td>" + array[0].Comments + "</td>"+
-                  "<td style='text-align:center;align-content: center'>" + encontrado + "</td>"+
+                "<td style='text-align:center;align-content: center'>" + encontrado + "</td>"+
+                "<td style='text-align:center;align-content: center'>" + encontrado + " " + array[0].Serial_Number + "</td>"+
+                "<td>" + array[0]['Model ID'] + "</td>"+
+                "<td>" + array[0]['assigned to'] + "</td>"+
+                "<td>" + "Revisar" + "</td>"+
+                "<td>" + array[0]['Install status'] + "</td>"+
+                "<td>" + "Revisar" + "</td>"+
+                "<td>" + array[0].Stockroom + "</td>"+
+                "<td>" + array[0].Action + "</td>"+
+                "<td>" + array[0].DaysNotconnect + "</td>"+
+                "<td>" + array[0].Comments + "</td>"+
               "</tr>"
             );
           }
@@ -171,21 +172,21 @@ function APIPostInventory(serial) {
             if (contador == 0) {
               $("#tbody_datos").append(
                 "<tr>"+
+                  "<td style='text-align:center;align-content: center'>" + 
+                    "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#exampleModal'>"+
+                      "Total <span class='badge badge-light'>" + (total + 1) + "</span>"+
+                    "</ >"+ 
+                  "</td>"+
                   "<td style='text-align:center;align-content: center'>" + encontrado + " " + elemento2.Serial_Number + "</td>"+
-                      "<td>" + elemento2['Model ID'] + "</td>"+
-                      "<td>" + elemento2['assigned to'] + "</td>"+
-                      "<td>" + "revisar" + "</td>"+
-                      "<td>" + elemento2['Install status'] + "</td>"+
-                      "<td>" + "revisar" + "</td>"+
-                      "<td>" + elemento2.Stockroom + "</td>"+
-                      "<td>" + elemento2.Action + "</td>"+
-                      "<td>" + elemento2.DaysNotconnect + "</td>"+
-                      "<td>" + elemento2.Comments + "</td>"+
-                      "<td style='text-align:center;align-content: center'>" + 
-                      "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#exampleModal'>"+
-                        "Total <span class='badge badge-light'>" + (total + 1) + "</span>"+
-                      "</button>"+ 
-                    "</td>"+
+                  "<td>" + elemento2['Model ID'] + "</td>"+
+                  "<td>" + elemento2['assigned to'] + "</td>"+
+                  "<td>" + "revisar" + "</td>"+
+                  "<td>" + elemento2['Install status'] + "</td>"+
+                  "<td>" + "revisar" + "</td>"+
+                  "<td>" + elemento2.Stockroom + "</td>"+
+                  "<td>" + elemento2.Action + "</td>"+
+                  "<td>" + elemento2.DaysNotconnect + "</td>"+
+                  "<td>" + elemento2.Comments + "</td>"+
                 "</tr>"
               );// mostrar registro
 
@@ -213,6 +214,21 @@ function APIPostInventory(serial) {
             } // solo la 1er iteracion
           }); // fin ciclo array
         } // fin else array > 1
+
+
+
+        /**
+         * Para la visualizacion de las ventanas modal hace falta un identificador para los botones, identificador de 2 tipos (objeto y elemento mostrado)
+         * usar el salidaApi para recorrer todos los registros y ubicar aquellos identificadores para asignar el evento 
+         * al realizar la creacion de la tabla borrar y eliminar los eventos de los botones
+         */
+
+
+
+
+
+
+
       }); // fin ciclo salidaAPI
       // nueva instancia de datatable
       tablaDatos = $('#zero_config').DataTable({pageLength: 10});
@@ -228,6 +244,7 @@ $("#btnProbar").click(function (e) {
   console.log("llaves",Object.keys(salidaAPI));
 });
 
+// input para ingresar manualmente
 $("#input_serial").blur(function (e) { 
   e.preventDefault();
   // console.log("fuera de foco",$("#input_serial").val());
@@ -254,6 +271,10 @@ $("#input_serial").blur(function (e) {
 
 });
 
+// metodo para agregar accion a los btn del modal
+function accionModal(array) {
+  
+}
 
 
 
