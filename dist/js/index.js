@@ -1,5 +1,8 @@
 // variable global que almacena la data
 var salidaAPI = [];
+// variable global, almacena los registros con mas items anidados
+var restoAPI = [];
+
 // inatncia de tabla 
 var tablaDatos = new DataTable('#zero_config');
 
@@ -128,6 +131,9 @@ function APIPostInventory(serial) {
       salidaAPI.forEach((elemento,i) => {
         // obtener el array en las iteraciones
         var array = elemento;
+        var serial = array[0].Serial_Number;
+        console.log("corrida",array);
+
         if (array.length == 1) {
           if (array[0].Action == "No encontrado") {
             $("#tbody_datos").append(
@@ -163,17 +169,50 @@ function APIPostInventory(serial) {
             );
           }
         } else {
+        
+          // console.log(i,"mas de uno",serial);
+          // console.log(i,'buscar',restoAPI.filter( (obj) => obj.Serial_Number === serial),serial);
+        
           var resto_array;
           var total;
           // enviar esta info. a la ventana modal
           resto_array = array.slice(1);
           total = resto_array.length;
+
+          // if (restoAPI.filter( (obj) => obj.Serial_Number === serial).length == 0) {
+          //   restoAPI.push({
+          //     Action: array[0].Action,
+          //     CWID:array[0].CWID,
+          //     Comments:array[0].Comments,
+          //     Country: array[0].Country,
+          //     DaysNotconnect: array[0].DaysNotconnect,
+          //     DaysOffline: array[0].DaysOffline,
+          //     Firmado: array[0].Firmado,
+          //     'Install status': array[0]["Install status"],
+          //     InventoryNumber: array[0].InventoryNumber,
+          //     LOCATION: array[0].LOCATION,
+          //     LastSeen: array[0].LastSeen,
+          //     Localidad : array[0].Localidad,
+          //     'Location Country': array[0]["Location Country"],
+          //     "Model ID": array[0]["Model ID"],
+          //     Serial_Number: array[0].Serial_Number,
+          //     Stockroom: array[0].Stockroom,
+          //     "User ID": array[0]["User ID"],
+          //     UserName: array[0].UserName,
+          //     "assigned to": array[0]["assigned to"],
+          //     total:total,
+          //     resto:resto_array
+          //   });
+          // }
+          // console.log("restoAPI",restoAPI);
+          
+          // original, dibuja el 1er registro, agrega evento para el modal del resto de registros
           array.forEach((elemento2,contador) => {
             if (contador == 0) {
               $("#tbody_datos").append(
                 "<tr>"+
                   "<td style='text-align:center;align-content: center'>" + 
-                    "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#exampleModal'>"+
+                    "<button id='" + serial + "' type='button' class='btn btn-primary' data-toggle='modal' data-target='#exampleModal'>"+
                       "Total <span class='badge badge-light'>" + (total + 1) + "</span>"+
                     "</ >"+ 
                   "</td>"+
@@ -190,46 +229,44 @@ function APIPostInventory(serial) {
                 "</tr>"
               );// mostrar registro
 
-              $('#exampleModal').on('show.bs.modal', function (event) {
-                $("#titulo_modal").html("Devices");
-                $("#tbody_dispositivos").empty();
-                resto_array.forEach(x => {
-                  $("#tbody_dispositivos").append(
-                    "<tr>"+
-                      "<td style='text-align:center;align-content: center'>" + encontrado + " " + x.Serial_Number + "</td>"+
-                          "<td>" + x['Model ID'] + "</td>"+
-                          "<td>" + x.UserName + "</td>"+
-                          "<td>" + x['assigned to'] + "</td>"+
-                          "<td>" + x['Install status'] + "</td>"+
-                          "<td>" + x.InventoryNumber + "</td>"+
-                          "<td>" + x.Localidad + "</td>"+
-                          "<td>" + x.Action + "</td>"+
-                          "<td>" + x.DaysNotconnect + "</td>"+
-                          "<td>" + x.Comments + "</td>"+
-                    "</tr>"
-                  );
-                }); // fin ciclo resto_array
-              }) // cuando se muestra el modal
+              $("#" + serial).click(function (e) { 
+                e.preventDefault();
+                $('#exampleModal').on('show.bs.modal', function (event) {
+                  $("#titulo_modal").html("Devices");
+                  $("#tbody_dispositivos").empty();
+                  resto_array.forEach(x => {
+                    $("#tbody_dispositivos").append(
+                      "<tr>"+
+                        "<td style='text-align:center;align-content: center'>" + encontrado + " " + x.Serial_Number + "</td>"+
+                            "<td>" + x['Model ID'] + "</td>"+
+                            "<td>" + x.UserName + "</td>"+
+                            "<td>" + x['assigned to'] + "</td>"+
+                            "<td>" + x['Install status'] + "</td>"+
+                            "<td>" + x.InventoryNumber + "</td>"+
+                            "<td>" + x.Localidad + "</td>"+
+                            "<td>" + x.Action + "</td>"+
+                            "<td>" + x.DaysNotconnect + "</td>"+
+                            "<td>" + x.Comments + "</td>"+
+                      "</tr>"
+                    );
+                  }); // fin ciclo resto_array
+                }) // cuando se muestra el modal
+              });
+
+
+
 
             } // solo la 1er iteracion
           }); // fin ciclo array
+
+
+
         } // fin else array > 1
-
-
-
-        /**
-         * Para la visualizacion de las ventanas modal hace falta un identificador para los botones, identificador de 2 tipos (objeto y elemento mostrado)
-         * usar el salidaApi para recorrer todos los registros y ubicar aquellos identificadores para asignar el evento 
-         * al realizar la creacion de la tabla borrar y eliminar los eventos de los botones
-         */
-
-
-
-
-
-
-
       }); // fin ciclo salidaAPI
+
+
+      // recorrer la variable salidaAPI para obtener el actualizado de todos los registros 
+
       // nueva instancia de datatable
       tablaDatos = $('#zero_config').DataTable({pageLength: 10});
     }, error(data) {
